@@ -18,6 +18,8 @@ import {
     StdEntitlementReadInput,
     StdTestConnectionOutput,
     AttributeChangeOp,
+    StdTestConnectionInput,
+    StdAccountListInput,
 } from '@sailpoint/connector-sdk'
 import { HTTPClient } from './http-client'
 import { Account } from './model/account'
@@ -41,7 +43,7 @@ export const connector = async () => {
     }
 
     return createConnector()
-        .stdTestConnection(async (context: Context, input: undefined, res: Response<StdTestConnectionOutput>) => {
+        .stdTestConnection(async (context: Context, input: StdTestConnectionInput, res: Response<StdTestConnectionOutput>) => {
             const response: AxiosResponse = await client.testConnection()
             if (response.status != 200) {
                 throw new ConnectorError('Unable to connect to RamBase')
@@ -50,7 +52,7 @@ export const connector = async () => {
                 res.send({})
             }
         })
-        .stdAccountList(async (context: Context, input: undefined, res: Response<StdAccountListOutput>) => {
+        .stdAccountList(async (context: Context, input: StdAccountListInput, res: Response<StdAccountListOutput>) => {
             const response1: AxiosResponse = await client.getAccounts()
             for (const acc of response1.data) {
                 const account: Account = new Account(acc)
